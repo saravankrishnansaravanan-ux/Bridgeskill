@@ -3481,7 +3481,10 @@ tr:hover td {
 /* Mobile Breakpoint Rules */
 @media (max-width: 768px) {
     body {
-        padding-bottom: 64px !important;
+        padding-bottom: 74px !important;
+    }
+    .coursera-top-bar {
+        display: none !important;
     }
     .mobile-menu-btn {
         display: inline-flex !important;
@@ -3491,15 +3494,33 @@ tr:hover td {
     .mobile-bottom-nav {
         display: flex !important;
     }
-    .btn-explore {
-        display: none !important;
-    }
+    .btn-explore,
+    .header-search-bar,
+    .nav-links,
     .top-nav-right {
         display: none !important;
     }
     .app-header {
-        padding: 0 14px !important;
-        height: 60px !important;
+        padding: 0 16px !important;
+        height: 56px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+    .header-left {
+        gap: 6px !important;
+    }
+    .header-right {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+    .portal-cards-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .portal-card-hub {
+        padding: 24px 20px !important;
     }
     .content-view {
         padding: 14px 12px !important;
