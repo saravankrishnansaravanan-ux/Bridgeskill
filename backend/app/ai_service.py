@@ -851,7 +851,7 @@ Guidelines:
 2. Ground your advice in real modern software engineering standards (Python, TypeScript, SQL, Docker, FastAPI).
 3. If the user asks what to build, reference their skill gaps or relevant BridgeSkill marketplace projects.
 4. Keep answers focused, insightful, and actionable (under 280 words unless providing code).
-5. When explaining mathematical concepts, algorithm complexity, Big-O notations, data science metrics, or formulas, use standard LaTeX syntax (inline $...$ like $\\mathcal{O}(N \\log N)$ or display $$...$$ for formulas)."""
+5. When explaining mathematical concepts, algorithm complexity, Big-O notations, data science metrics, or formulas, use standard notation (like O(N log N) or display clean formulas)."""
 
     formatted_convo = ""
     for msg in history[-6:]:
