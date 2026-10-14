@@ -121,8 +121,10 @@ function updateUIForAuth(isAuthenticated) {
     const notifWrapper = document.getElementById('header-notif-wrapper');
 
     if (isAuthenticated && state.user) {
-        sidebar.style.display = 'flex';
-        notifWrapper.style.display = 'block';
+        if (sidebar) {
+            sidebar.style.display = window.innerWidth > 992 ? 'flex' : 'none';
+        }
+        if (notifWrapper) notifWrapper.style.display = 'block';
 
         const displayName = state.user.profile?.name || state.user.profile?.company_name || state.user.email.split('@')[0];
         document.getElementById('sidebar-user-name').innerText = displayName;
@@ -145,9 +147,10 @@ function updateUIForAuth(isAuthenticated) {
             <button class="btn btn-outline" id="btn-logout-header" style="padding: 6px 14px; font-size: 13px;">Sign Out</button>
         `;
         document.getElementById('btn-logout-header').addEventListener('click', logout);
-        document.getElementById('btn-logout-sidebar').addEventListener('click', logout);
+        const logoutSidebar = document.getElementById('btn-logout-sidebar');
+        if (logoutSidebar) logoutSidebar.addEventListener('click', logout);
     } else {
-        sidebar.style.display = 'none';
+        if (sidebar) sidebar.style.display = 'none';
         notifWrapper.style.display = 'none';
         authBtnHeader.innerHTML = `
             <div class="login-dropdown-wrapper">
@@ -307,7 +310,28 @@ function renderSidebarMenu(role) {
             </a>
         `;
     }
+
+    const mobileDrawer = document.getElementById('mobile-drawer-links');
+    if (mobileDrawer && menu) {
+        mobileDrawer.innerHTML = `
+            ${menu.innerHTML}
+            <hr style="border:none; border-top:1px solid var(--border-default); margin:12px 0;">
+            <button class="btn btn-outline" onclick="toggleMobileMenu(false); logout();" style="width:100%; justify-content:center; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+            </button>
+        `;
+        mobileDrawer.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => toggleMobileMenu(false));
+        });
+    }
 }
+
+window.addEventListener('resize', () => {
+    const sidebar = document.getElementById('app-sidebar');
+    if (sidebar && state.user) {
+        sidebar.style.display = window.innerWidth > 992 ? 'flex' : 'none';
+    }
+});
 
 async function logout() {
     loader.show();

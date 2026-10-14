@@ -1891,18 +1891,36 @@ tr:hover td {
 }
 
 /* Responsive Breakpoints */
+/* Responsive Breakpoints */
 @media (max-width: 992px) {
-    .app-header { padding: 0 20px; }
-    .coursera-top-bar { padding: 8px 20px; }
-    .content-view { padding: 20px; }
-    .sidebar { display: none; }
-    .header-search-bar { width: 220px; }
+    .app-header { padding: 0 16px; }
+    .coursera-top-bar { display: none !important; }
+    #app-sidebar,
+    .sidebar,
+    aside.sidebar {
+        display: none !important;
+        width: 0 !important;
+        min-width: 0 !important;
+        visibility: hidden !important;
+        position: absolute !important;
+        left: -9999px !important;
+    }
+    .main-container {
+        display: block !important;
+        width: 100% !important;
+    }
+    .content-view {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 16px 14px 84px 14px !important;
+    }
+    .header-search-bar { display: none !important; }
 }
 
 @media (max-width: 768px) {
-    .nav-links { display: none; }
-    .header-search-bar { display: none; }
-    .coursera-top-inner { flex-direction: column; gap: 6px; }
+    .nav-links { display: none !important; }
+    .header-search-bar { display: none !important; }
+    .coursera-top-bar { display: none !important; }
 }
 
 /* =========================================================================
