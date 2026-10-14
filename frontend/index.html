@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BridgeSkill | AI-Powered Micro-Projects Platform</title>
+    <!-- Google Fonts: Coursera Typography (Source Sans 3 & Open Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX LaTeX Math Engine -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <!-- Custom Style Sheet (Coursera CDS) -->
+    <link rel="stylesheet" href="/css/style.css?v=coursera_v4">
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app">
+        <!-- Coursera-Inspired Audience Utility Bar -->
+        <div class="coursera-top-bar">
+            <div class="coursera-top-inner">
+                <div class="top-nav-segment">
+                    <a href="#login-student" class="top-link"><i class="fa-solid fa-user-graduate" style="color:var(--coursera-blue);"></i> Student Portal</a>
+                    <a href="#login-company" class="top-link"><i class="fa-solid fa-building" style="color:#059669;"></i> Company Portal</a>
+                    <a href="#portals" class="top-link"><i class="fa-solid fa-door-open"></i> All Portals</a>
+                    <a href="#code-sandbox" class="top-link"><i class="fa-solid fa-laptop-code" style="color:var(--coursera-blue);"></i> AI Sandbox</a>
+                    <a href="#leaderboard" class="top-link"><i class="fa-solid fa-ranking-star" style="color:#d97706;"></i> Leaderboard</a>
+                </div>
+                <div class="top-nav-right" style="display:flex; align-items:center; gap:18px; color:var(--text-secondary); font-size:12px;">
+                    <span><i class="fa-solid fa-shield-halved" style="color:var(--coursera-blue);"></i> Verifiable Credentials</span>
+                    <span><i class="fa-solid fa-building-circle-check" style="color:var(--success);"></i> 350+ Verified Partners</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Header (Navbar) -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo" style="cursor: pointer;" onclick="location.hash='#dashboard'">
+                    <i class="fa-solid fa-graduation-cap logo-icon"></i>
+                    <span class="logo-text">Bridge<span>Skill</span></span>
+                </div>
+                <button class="btn-explore" onclick="location.hash='#projects'">
+                    <i class="fa-solid fa-table-cells"></i> Explore <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
+                </button>
+                <div class="header-search-bar" id="nav-search-container">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="What role or skill do you want to learn?" id="nav-global-search" onkeydown="if(event.key==='Enter'){location.hash='#projects';}">
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#projects" class="nav-link" id="nav-browse-projects">Micro-Projects</a>
+                <a href="#code-sandbox" class="nav-link" id="nav-code-sandbox"><i class="fa-solid fa-code"></i> AI Sandbox</a>
+                <a href="#leaderboard" class="nav-link" id="nav-leaderboard"><i class="fa-solid fa-trophy" style="color:#d97706;"></i> Leaderboard</a>
+                <a href="#ai-consultant" class="nav-link" id="nav-ai-consultant"><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--coursera-blue);"></i> AI Mentor</a>
+                <a href="#skill-gap" class="nav-link" id="nav-skill-gap">Skill Gap</a>
+                <a href="#talents" class="nav-link" id="nav-talents">Recruit Talent</a>
+                <a href="#verify-certificate" class="nav-link" id="nav-verify-cert">Verify Credential</a>
+            </nav>
+            <div class="header-right">
+                <div class="notif-wrapper" id="header-notif-wrapper" style="display: none; position: relative;">
+                    <button class="notif-bell-btn" id="notif-bell-btn" title="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notif-badge" id="notif-badge-count" style="display: none;">0</span>
+                    </button>
+                    <div class="notif-dropdown glass" id="notif-dropdown">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h4 style="font-size: 15px; font-weight: 700;">Notifications</h4>
+                            <button class="btn btn-outline" id="btn-mark-all-read" style="padding: 4px 8px; font-size: 11px;">Mark all read</button>
+                        </div>
+                        <div id="notif-list-items"></div>
+                    </div>
+                </div>
+                <div class="auth-buttons" id="header-auth-buttons">
+                    <div class="login-dropdown-wrapper">
+                        <button class="btn btn-outline" id="btn-login-dropdown-toggle" type="button">
+                            Sign In <i class="fa-solid fa-chevron-down" style="font-size:10px; margin-left:4px;"></i>
+                        </button>
+                        <div class="login-dropdown-menu" id="login-dropdown-menu">
+                            <a href="#login-student" class="login-dropdown-item">
+                                <i class="fa-solid fa-graduation-cap" style="color:var(--coursera-blue);"></i>
+                                <div>
+                                    <strong>Student Portal</strong>
+                                    <span>Projects, credentials & portfolio</span>
+                                </div>
+                            </a>
+                            <a href="#login-company" class="login-dropdown-item">
+                                <i class="fa-solid fa-building" style="color:#059669;"></i>
+                                <div>
+                                    <strong>Company Portal</strong>
+                                    <span>Post projects & recruit talent</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="register-dropdown-wrapper">
+                        <button class="btn btn-primary" id="btn-register-dropdown-toggle" type="button">
+                            Get Started <i class="fa-solid fa-chevron-down" style="font-size:10px; margin-left:4px;"></i>
+                        </button>
+                        <div class="login-dropdown-menu" id="register-dropdown-menu">
+                            <a href="#register-student" class="login-dropdown-item">
+                                <i class="fa-solid fa-user-graduate" style="color:var(--coursera-blue);"></i>
+                                <div>
+                                    <strong>Join as Student</strong>
+                                    <span>Solve micro-projects & build portfolio</span>
+                                </div>
+                            </a>
+                            <a href="#register-company" class="login-dropdown-item">
+                                <i class="fa-solid fa-building-circle-check" style="color:#059669;"></i>
+                                <div>
+                                    <strong>Register Company</strong>
+                                    <span>Post projects & recruit talent</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+
+        <!-- Main Layout with optional sidebar and dynamic content views -->
+        <div class="main-container">
+            <!-- Sidebar (visible only when logged in) -->
+            <aside class="sidebar glass" id="app-sidebar" style="display: none;">
+                <div class="user-brief">
+                    <div class="avatar" id="sidebar-user-avatar">U</div>
+                    <div class="user-info">
+                        <h4 id="sidebar-user-name">User Name</h4>
+                        <span class="user-role" id="sidebar-user-role">Student</span>
+                    </div>
+                </div>
+                <hr class="divider">
+                <nav class="sidebar-menu" id="sidebar-menu-items">
+                    <!-- Loaded dynamically based on Role -->
+                </nav>
+                <div class="sidebar-footer">
+                    <button class="btn btn-logout" id="btn-logout-sidebar">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Dynamic View Container -->
+            <main class="content-view" id="main-content">
+                <!-- Loader -->
+                <div class="loader-container" id="app-loader">
+                    <div class="loader"></div>
+                </div>
+                
+                <!-- Dynamic views will be injected here -->
+                <div id="view-mount"></div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Floating AI Consultant Widget -->
+    <button class="ai-fab-btn" id="ai-fab-toggle" title="Chat with AI Consultant" aria-label="Open AI Consultant">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span class="ai-fab-badge" title="AI Consultant Online"></span>
+    </button>
+
+    <!-- AI Floating Chat Window -->
+    <div class="ai-floating-window" id="ai-floating-window">
+        <div class="ai-consultant-header">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; color:white; font-size:16px;">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <h4 style="margin:0; font-size:14px; font-weight:700; color:#fff;">AI Consultant</h4>
+                    <span style="font-size:11px; color:rgba(255,255,255,0.85); display:flex; align-items:center; gap:4px;">
+                        <span style="width:6px; height:6px; background:#4ade80; border-radius:50%; display:inline-block;"></span>
+                        Live Career & Project Mentor
+                    </span>
+                </div>
+            </div>
+            <div style="display:flex; gap:6px;">
+                <a href="#ai-consultant" id="btn-floating-expand" title="Open Fullscreen View" style="background:transparent; border:none; color:white; cursor:pointer; font-size:14px; padding:6px; border-radius:4px; display:flex; align-items:center; text-decoration:none;">
+                    <i class="fa-solid fa-expand"></i>
+                </a>
+                <button id="btn-floating-close" title="Close" style="background:transparent; border:none; color:white; cursor:pointer; font-size:16px; padding:6px; border-radius:4px;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <div class="ai-chat-body" id="ai-floating-messages">
+            <div style="background:#FFFFFF; border:1px solid var(--border-default); border-radius:8px; padding:14px; font-size:13.5px; line-height:1.55; color:var(--text-primary); box-shadow:0 1px 3px rgba(0,0,0,0.05); min-width:0; overflow-wrap:break-word; word-break:break-word;">
+                <div style="font-weight:700; color:var(--coursera-blue); margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-graduation-cap"></i> BridgeSkill AI Consultant
+                </div>
+                Hello! I am your 24/7 Career Advisor and Technical Project Mentor. Ask me anything about skill gaps, project architecture, code debugging, or job readiness!
+            </div>
+        </div>
+        <div class="quick-prompt-chips" id="ai-floating-chips">
+            <button type="button" class="quick-chip" data-prompt="What technical skills should I learn next for high-paying roles?">🚀 Skills to learn</button>
+            <button type="button" class="quick-chip" data-prompt="How do I architect my micro-project database and backend?">🏗️ Project Architecture</button>
+            <button type="button" class="quick-chip" data-prompt="How can I improve my employability score and resume?">📈 Improve Score</button>
+        </div>
+        <form class="ai-chat-input-row" id="ai-floating-form">
+            <input type="text" id="ai-floating-input" placeholder="Ask about career or project..." class="form-input" style="flex:1; padding:8px 12px; font-size:13px;" required />
+            <button type="submit" class="btn btn-primary" style="padding:8px 14px; font-size:13px;">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- App Logic Script -->
+    <script src="/js/app.js?v=coursera_v4" type="module"></script>
+</body>
+</html>
