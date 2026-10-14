@@ -397,6 +397,38 @@ document.addEventListener('DOMContentLoaded', () => {
     initFloatingAIConsultant();
 });
 
+window.toggleMobileMenu = function(open) {
+    const overlay = document.getElementById('mobile-drawer-overlay');
+    if (!overlay) return;
+    if (open === undefined) {
+        overlay.classList.toggle('active');
+    } else if (open) {
+        overlay.classList.add('active');
+    } else {
+        overlay.classList.remove('active');
+    }
+};
+
+window.updateMobileNavActive = function(hash) {
+    document.querySelectorAll('.mobile-bottom-nav-item').forEach(el => el.classList.remove('active'));
+    if (hash === '#projects' || hash === '#dashboard') {
+        const item = document.getElementById('mob-nav-projects');
+        if (item) item.classList.add('active');
+    } else if (hash === '#messages') {
+        const item = document.getElementById('mob-nav-messages');
+        if (item) item.classList.add('active');
+    } else if (hash === '#leaderboard') {
+        const item = document.getElementById('mob-nav-leaderboard');
+        if (item) item.classList.add('active');
+    } else if (hash === '#ai-consultant') {
+        const item = document.getElementById('mob-nav-ai');
+        if (item) item.classList.add('active');
+    } else {
+        const item = document.getElementById('mob-nav-user');
+        if (item) item.classList.add('active');
+    }
+};
+
 function initFloatingAIConsultant() {
     const fabBtn = document.getElementById('ai-fab-toggle');
     const win = document.getElementById('ai-floating-window');
@@ -560,6 +592,7 @@ async function router() {
         link.classList.remove('active');
         if (link.getAttribute('href') === hash) link.classList.add('active');
     });
+    updateMobileNavActive(hash);
 
     const renderFunc = routes[hash] || renderDashboardView;
     try {
@@ -4589,7 +4622,7 @@ async function renderMessagesView() {
         // Preselect active user if requested or if first conversation exists
         if (state.activeChatUser) {
             loadChatWithUser(state.activeChatUser.id, state.activeChatUser.name, state.activeChatUser.role);
-        } else if (window.conversationsCache.length > 0) {
+        } else if (window.innerWidth > 768 && window.conversationsCache.length > 0) {
             const first = window.conversationsCache[0];
             loadChatWithUser(first.other_user_id, first.name, first.role);
         }
@@ -4598,6 +4631,13 @@ async function renderMessagesView() {
         if (sArea) sArea.innerHTML = `<p style="color:var(--danger); font-size:12px; padding:12px;">${e.message}</p>`;
     }
 }
+
+window.backToMobileContacts = function() {
+    const chatContainer = document.querySelector('.chat-container');
+    if (chatContainer) chatContainer.classList.remove('mobile-chat-active');
+    state.activeChatUser = null;
+    document.querySelectorAll('.chat-contact').forEach(el => el.classList.remove('active'));
+};
 
 window.renderSidebarConversations = function(conversations) {
     const sArea = document.getElementById('sidebar-conversations-area');
@@ -4681,6 +4721,9 @@ window.loadChatWithUser = async function(otherUserId, name, role) {
     state.activeChatUser = { id: otherUserId, name, role };
     currentActiveReply = null;
 
+    const chatContainer = document.querySelector('.chat-container');
+    if (chatContainer) chatContainer.classList.add('mobile-chat-active');
+
     const myRole = state.user?.role || 'company';
     const companyQuickReplies = [
         "👋 Hi! Thanks for connecting. We'd love to discuss opportunities.",
@@ -4699,7 +4742,10 @@ window.loadChatWithUser = async function(otherUserId, name, role) {
     const win = document.getElementById('chat-main-window');
     win.innerHTML = `
         <div style="padding:14px 20px; border-bottom:1px solid var(--border-default); display:flex; justify-content:space-between; align-items:center; background:#FFFFFF;">
-            <div style="display:flex; align-items:center; gap:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button class="mobile-back-to-contacts-btn" onclick="backToMobileContacts()" title="Back to all conversations">
+                    <i class="fa-solid fa-arrow-left"></i> Chats
+                </button>
                 <div class="chat-avatar-wrapper">
                     <div class="avatar avatar-md" style="font-weight:700;">${(name||'U').charAt(0).toUpperCase()}</div>
                     <span class="chat-status-dot online"></span>

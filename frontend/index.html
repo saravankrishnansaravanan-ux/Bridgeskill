@@ -61,6 +61,9 @@
                 <a href="#verify-certificate" class="nav-link" id="nav-verify-cert">Verify Credential</a>
             </nav>
             <div class="header-right">
+                <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleMobileMenu(true)" aria-label="Open Navigation Menu" title="Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
                 <div class="notif-wrapper" id="header-notif-wrapper" style="display: none; position: relative;">
                     <button class="notif-bell-btn" id="notif-bell-btn" title="Notifications">
                         <i class="fa-solid fa-bell"></i>
@@ -209,7 +212,56 @@
         </form>
     </div>
 
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-drawer-overlay" class="mobile-drawer-overlay" onclick="toggleMobileMenu(false)">
+        <div class="mobile-drawer-content" onclick="event.stopPropagation()">
+            <div class="mobile-drawer-header">
+                <div class="logo">
+                    <i class="fa-solid fa-graduation-cap logo-icon"></i>
+                    <span class="logo-text">Bridge<span>Skill</span></span>
+                </div>
+                <button class="mobile-drawer-close" onclick="toggleMobileMenu(false)" aria-label="Close menu">&times;</button>
+            </div>
+            <div class="mobile-drawer-links" id="mobile-drawer-links">
+                <a href="#projects" class="mobile-drawer-link" onclick="toggleMobileMenu(false)"><i class="fa-solid fa-table-cells"></i> Micro-Projects</a>
+                <a href="#messages" class="mobile-drawer-link" onclick="toggleMobileMenu(false)"><i class="fa-solid fa-message"></i> Messaging Hub</a>
+                <a href="#code-sandbox" class="mobile-drawer-link" onclick="toggleMobileMenu(false)"><i class="fa-solid fa-code"></i> AI Sandbox</a>
+                <a href="#leaderboard" class="mobile-drawer-link" onclick="toggleMobileMenu(false)"><i class="fa-solid fa-trophy"></i> Leaderboard</a>
+                <a href="#ai-consultant" class="mobile-drawer-link" onclick="toggleMobileMenu(false)"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Mentor</a>
+                <a href="#skill-gap" class="mobile-drawer-link" onclick="toggleMobileMenu(false)"><i class="fa-solid fa-chart-line"></i> Skill Gap Analyzer</a>
+                <a href="#talents" class="mobile-drawer-link" onclick="toggleMobileMenu(false)"><i class="fa-solid fa-user-check"></i> Recruit Talent</a>
+                <a href="#verify-certificate" class="mobile-drawer-link" onclick="toggleMobileMenu(false)"><i class="fa-solid fa-shield-halved"></i> Verify Credential</a>
+                <a href="#portals" class="mobile-drawer-link" onclick="toggleMobileMenu(false)"><i class="fa-solid fa-door-open"></i> Login & Portals</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar (Phone App Experience) -->
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+        <a href="#projects" class="mobile-bottom-nav-item" id="mob-nav-projects">
+            <i class="fa-solid fa-table-cells"></i>
+            <span>Explore</span>
+        </a>
+        <a href="#messages" class="mobile-bottom-nav-item" id="mob-nav-messages">
+            <i class="fa-solid fa-message"></i>
+            <span>Messages</span>
+            <span class="mobile-nav-badge" id="mob-msg-unread-badge" style="display:none;"></span>
+        </a>
+        <a href="#leaderboard" class="mobile-bottom-nav-item" id="mob-nav-leaderboard">
+            <i class="fa-solid fa-trophy"></i>
+            <span>Ranking</span>
+        </a>
+        <a href="#ai-consultant" class="mobile-bottom-nav-item" id="mob-nav-ai">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>AI Mentor</span>
+        </a>
+        <a href="#portals" class="mobile-bottom-nav-item" id="mob-nav-user">
+            <i class="fa-solid fa-circle-user"></i>
+            <span>Account</span>
+        </a>
+    </nav>
+
     <!-- App Logic Script -->
-    <script src="/js/app.js?v=coursera_v4" type="module"></script>
+    <script src="/js/app.js?v=coursera_v5" type="module"></script>
 </body>
 </html>

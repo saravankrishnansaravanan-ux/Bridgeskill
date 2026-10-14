@@ -995,28 +995,58 @@ async def get_chat_history(other_user_id: int, current_user: dict = Depends(get_
 
 @router.post("/api/messages/send")
 async def send_message(req: MessageSendRequest, current_user: dict = Depends(get_current_user)):
-    """Sends a message and creates a notification for the recipient."""
+    """Sends a message and creates a notification for the recipient with smart recipient resolution."""
     uid = current_user["id"]
     try:
         with transaction() as conn:
             cursor = conn.cursor()
+            
+            # Resolve receiver_id to a valid users(id)
+            target_user_id = req.receiver_id
+            cursor.execute("SELECT id FROM users WHERE id = ?", (target_user_id,))
+            if not cursor.fetchone():
+                # Check if receiver_id was a student_profiles.id
+                cursor.execute("SELECT user_id FROM student_profiles WHERE id = ?", (target_user_id,))
+                sp = cursor.fetchone()
+                if sp and sp["user_id"]:
+                    target_user_id = sp["user_id"]
+                else:
+                    # Check if receiver_id was a company_profiles.id
+                    cursor.execute("SELECT user_id FROM company_profiles WHERE id = ?", (target_user_id,))
+                    cp = cursor.fetchone()
+                    if cp and cp["user_id"]:
+                        target_user_id = cp["user_id"]
+
+            # Double-check sender exists in users
+            cursor.execute("SELECT id FROM users WHERE id = ?", (uid,))
+            if not cursor.fetchone():
+                cursor.execute("SELECT id FROM users WHERE email = ?", (current_user.get("email"),))
+                u = cursor.fetchone()
+                if u:
+                    uid = u["id"]
+
             cursor.execute("""
                 INSERT INTO messages (sender_id, receiver_id, content)
                 VALUES (?, ?, ?)
-            """, (uid, req.receiver_id, req.content))
+            """, (uid, target_user_id, req.content))
             msg_id = cursor.lastrowid
 
             # Create notification for recipient
             sender_name = current_user.get("email", "A user")
-            create_notification(
-                cursor,
-                user_id=req.receiver_id,
-                title="New Message",
-                message=f"You received a new message: '{req.content[:40]}...'",
-                link="#messages"
-            )
+            try:
+                create_notification(
+                    cursor,
+                    user_id=target_user_id,
+                    title="New Message",
+                    message=f"You received a new message: '{req.content[:40]}...'",
+                    link="#messages"
+                )
+            except Exception:
+                pass
 
             return {"message_id": msg_id, "status": "sent"}
+    except sqlite3.IntegrityError as e:
+        raise HTTPException(status_code=400, detail="Unable to send message: Recipient account does not exist or was removed.")
     except sqlite3.Error as e:
         raise HTTPException(status_code=500, detail=str(e))
 

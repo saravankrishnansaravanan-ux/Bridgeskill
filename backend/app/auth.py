@@ -65,6 +65,41 @@ async def get_current_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Could not validate credentials or token expired."
         )
+
+    # Ensure user exists in SQLite database to prevent foreign key errors
+    try:
+        from backend.app.db import get_db_connection
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        try:
+            user_id = payload.get("id")
+            user_email = payload.get("email") or payload.get("sub")
+            cursor.execute("SELECT id, email, role FROM users WHERE id = ?", (user_id,))
+            u = cursor.fetchone()
+            if not u and user_email:
+                cursor.execute("SELECT id, email, role FROM users WHERE email = ?", (user_email,))
+                u = cursor.fetchone()
+            if not u and user_email:
+                user_role = payload.get("role", "student")
+                cursor.execute("INSERT INTO users (email, password_hash, role) VALUES (?, 'session_pass', ?)", (user_email, user_role))
+                conn.commit()
+                new_id = cursor.lastrowid
+                if user_role == "student":
+                    cursor.execute("INSERT INTO student_profiles (user_id, name) VALUES (?, ?)", (new_id, user_email.split("@")[0].capitalize()))
+                    conn.commit()
+                elif user_role == "company":
+                    cursor.execute("INSERT INTO company_profiles (user_id, company_name) VALUES (?, ?)", (new_id, user_email.split("@")[0].capitalize() + " Tech"))
+                    conn.commit()
+                payload["id"] = new_id
+                return payload
+            if u:
+                payload["id"] = u["id"]
+                payload["role"] = u["role"]
+                payload["email"] = u["email"]
+        finally:
+            conn.close()
+    except Exception as db_err:
+        print(f"[Auth] User verification warning: {db_err}")
         
     return payload
 
@@ -87,6 +122,30 @@ async def get_optional_current_user(
         return None
         
     payload = verify_access_token(token)
+    if not payload:
+        return None
+
+    try:
+        from backend.app.db import get_db_connection
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        try:
+            user_id = payload.get("id")
+            user_email = payload.get("email") or payload.get("sub")
+            cursor.execute("SELECT id, email, role FROM users WHERE id = ?", (user_id,))
+            u = cursor.fetchone()
+            if not u and user_email:
+                cursor.execute("SELECT id, email, role FROM users WHERE email = ?", (user_email,))
+                u = cursor.fetchone()
+            if u:
+                payload["id"] = u["id"]
+                payload["role"] = u["role"]
+                payload["email"] = u["email"]
+        finally:
+            conn.close()
+    except Exception:
+        pass
+
     return payload
 
 def require_role(allowed_roles: list[str]):
